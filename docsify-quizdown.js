@@ -11,8 +11,8 @@
     // Invoked on each page load before new markdown is transformed to HTML.
     hook.beforeEach(function (markdown) {
     	// Convert HTML comments 'quizdown:start' and 'quizdown:end' to code block delimiters
-      markdown = markdown.replaceAll(regex.quizWrapperStart, "\n```quizdown");
-      markdown = markdown.replaceAll(regex.quizWrapperEnd, "\n```");
+      markdown = markdown.replaceAll(regex.quizWrapperStart, "\n````quizdown");
+      markdown = markdown.replaceAll(regex.quizWrapperEnd, "\n````");
       return markdown;
     });
   	
@@ -28,10 +28,14 @@
       	// Attach Quiz to the newly created div
       	window.quizdown.createApp(code, container, config);
       	// Inject some css into the shadow DOM to force full width
-      	const content = container.shadowRoot.querySelector(".quizdown-content");
-      	content.style.maxWidth = "none";
-      	content.style.padding = "0";
-      	content.style.margin = "2em 0";
+      	with (container.shadowRoot.querySelector(".quizdown-content").style) {
+      		maxWidth = "none";
+      		padding = "0";
+      		margin = "2em 0";
+      	}
+      	const style = document.createElement('style');
+      	style.innerHTML = "pre > code { display: block; }";
+      	container.shadowRoot.appendChild(style);
     	});
     });
   }
